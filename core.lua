@@ -65,11 +65,11 @@ local options = {
 --	Print text to the General Chat
 ---------------------------------------------------------------------------------------------------
 local function DebugPrint(message)
-    if DEFAULT_CHAT_FRAME then
-        -- enable this line for debugging information
-        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99[" .. addonName .. "]|r: " ..
-                                          message)
-    end
+    -- enable these line for debugging information
+    -- if DEFAULT_CHAT_FRAME then
+    --     DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99[" .. addonName .. "]|r: " ..
+    --                                       message)
+    -- end
 end
 
 ---------------------------------------------------------------------------------------------------
