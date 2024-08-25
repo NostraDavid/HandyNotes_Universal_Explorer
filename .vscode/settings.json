@@ -20,6 +20,9 @@
         "UIDropDownMenu_AddButton",
         "ToggleDropDownMenu",
         "DEFAULT_CHAT_FRAME",
-        "BattlefieldMapFrame"
+        "BattlefieldMapFrame",
+        "WorldMapFrame",
+        "MapCanvasPinMixin",
+        "MapCanvasDataProviderMixin"
     ]
 }
