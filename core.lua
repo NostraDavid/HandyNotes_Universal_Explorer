@@ -394,6 +394,59 @@ function HL:RefreshZoneMap()
     end
 end
 
+function HL:RefreshBattleMap()
+    local mapID = C_Map.GetBestMapForUnit("player")
+    if not mapID then return end
+
+    if not BattlefieldMapFrame or not BattlefieldMapFrame:IsShown() then return end
+
+    -- Remove any existing icons
+    if self.battleMapPins then
+        for _, pin in pairs(self.battleMapPins) do
+            pin:Hide()
+            pin:SetParent(nil)
+        end
+    else
+        self.battleMapPins = {}
+    end
+
+    local zoneMapFrame = BattlefieldMapFrame.ScrollContainer
+    if not zoneMapFrame then return end
+
+    for coord, data in pairs(ns.points[mapID] or {}) do
+        local x, y = HandyNotes:getXY(coord)
+        local pin = CreateFrame("Frame", nil, zoneMapFrame)
+        pin:SetSize(16 * db.icon_scale, 16 * db.icon_scale)
+
+        local texture = pin:CreateTexture(nil, "OVERLAY")
+        texture:SetAllPoints(pin)
+        texture:SetTexture(ns.icon)
+        pin.texture = texture
+
+        pin:SetAlpha(db.icon_alpha)
+        pin:SetPoint("CENTER", zoneMapFrame, "TOPLEFT", x * zoneMapFrame:GetWidth(),
+                     -y * zoneMapFrame:GetHeight())
+        pin:Show()
+
+        table.insert(self.battleMapPins, pin)
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+-- Safely interact with BattlefieldMapFrame when it's available
+---------------------------------------------------------------------------------------------------
+local function SetupBattlefieldMapHooks()
+    if not BattlefieldMapFrame then
+        -- Delay until BattlefieldMapFrame is available
+        C_Timer.After(1, SetupBattlefieldMapHooks)
+        return
+    end
+
+    BattlefieldMapFrame:HookScript("OnShow", function() HL:RefreshBattleMap() end)
+    BattlefieldMapFrame.ScrollContainer:HookScript("OnSizeChanged", function() HL:RefreshBattleMap() end)
+    BattlefieldMapFrame.ScrollContainer:HookScript("OnMouseWheel", function() HL:RefreshBattleMap() end)
+end
+
 ---------------------------------------------------------------------------------------------------
 --	Plugin initialization, enabling and disabling
 ---------------------------------------------------------------------------------------------------
@@ -416,6 +469,9 @@ function HL:OnInitialize()
 
     self:RegisterEvent("MINIMAP_UPDATE_ZOOM", "RefreshZoneMap")
     self:RegisterEvent("MINIMAP_UPDATE_TRACKING", "RefreshZoneMap")
+
+    -- Safely set up hooks for the BattlefieldMapFrame
+    SetupBattlefieldMapHooks()
 end
 
 function HL:Refresh()
@@ -423,4 +479,5 @@ function HL:Refresh()
     self:SendMessage("HandyNotes_NotifyUpdate",
                      addonName:gsub("HandyNotes_", ""))
     self:RefreshZoneMap()
+    self:RefreshBattleMap()
 end
