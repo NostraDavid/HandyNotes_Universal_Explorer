@@ -1,0 +1,31 @@
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+## Interface: 100002
+## Name: HandyNotes: Universal Explorer
+## Version: 10.0.2.1
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+## Title: HandyNotes: Universal Explorer|cffFFFFFF 10.0.2.1 |r
+## Notes: Will show you on the map |nthe co-ordinations of every area |nyou need to discover for the |nUniversal Explorer achievement. |n|n(Coordinate Sources from Wowhead)|n|cff3399ff                                      Coded by |cffff0000Devil|r |cffFFFFFF(C)|r|n|n
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+## Author: Devil & r15ch13
+## eMail: devil.wow.uk@gmail.com
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+## SavedVariables: HandyNotes_UniversalExplorerDB
+## DefaultState: Enabled
+## RequiredDeps: HandyNotes
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+## X-Category: Map
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+
+core.lua
+
+data\eastern.kingdoms.lua
+data\kalimdor.lua
+data\outland.lua
+data\northend.lua
+data\cataclysm.lua
+data\pandaria.lua
+data\draenor.lua
+data\legion.lua
+data\bfa.lua
+data\shadowlands.lua
+data\dragonflight.lua
