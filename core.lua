@@ -358,6 +358,43 @@ function HLHandler:OnLeave(uiMapID, coord)
 end
 
 ---------------------------------------------------------------------------------------------------
+-- Handle Minimap Icons (Zone Map)
+---------------------------------------------------------------------------------------------------
+function HL:RefreshZoneMap()
+    if not Minimap or not Minimap:IsShown() then return end
+    local mapID = C_Map.GetBestMapForUnit("player")
+    if not mapID then return end
+
+    -- Remove any existing icons
+    if self.minimapPins then
+        for _, pin in pairs(self.minimapPins) do
+            pin:Hide()
+            pin:SetParent(nil)
+        end
+    else
+        self.minimapPins = {}
+    end
+
+    for coord, data in pairs(ns.points[mapID] or {}) do
+        local x, y = HandyNotes:getXY(coord)
+        local pin = CreateFrame("Frame", nil, Minimap)
+        pin:SetSize(12 * db.icon_scale, 12 * db.icon_scale)
+
+        local texture = pin:CreateTexture(nil, "OVERLAY")
+        texture:SetAllPoints(pin)
+        texture:SetTexture(ns.icon)
+        pin.texture = texture
+
+        pin:SetAlpha(db.icon_alpha)
+        pin:SetPoint("CENTER", Minimap, "CENTER", x * Minimap:GetWidth(),
+                     -y * Minimap:GetHeight())
+        pin:Show()
+
+        table.insert(self.minimapPins, pin)
+    end
+end
+
+---------------------------------------------------------------------------------------------------
 --	Plugin initialization, enabling and disabling
 ---------------------------------------------------------------------------------------------------
 function HL:OnInitialize()
@@ -377,10 +414,13 @@ function HL:OnInitialize()
     self:RegisterEvent("CRITERIA_COMPLETE", "Refresh")
     self:RegisterEvent("ACHIEVEMENT_EARNED", "Refresh")
 
+    self:RegisterEvent("MINIMAP_UPDATE_ZOOM", "RefreshZoneMap")
+    self:RegisterEvent("MINIMAP_UPDATE_TRACKING", "RefreshZoneMap")
 end
 
 function HL:Refresh()
     DebugPrint("Refresh")
     self:SendMessage("HandyNotes_NotifyUpdate",
                      addonName:gsub("HandyNotes_", ""))
+    self:RefreshZoneMap()
 end
